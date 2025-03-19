@@ -12,12 +12,20 @@
 </head>
 
 <body>
-    <div>
+    <div class="container-sm">
+        <h1 class="text-center">GAMEDEXEXTENDED</h1>
         <form action="" method="POST">
-            <label for="user">Username:</label><br>
-            <input type="text" id="user" name="user"><br>
-            <label for="pass">Password:</label><br>
-            <input type="password" id="pass" name="pass">
+            <div class="form-floating mb-3">
+                <input type="user" class="form-control" id="user" placeholder="Username">
+                <label for="user" class="w-auto">Username</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="pass" placeholder="pass">
+                <label for="pass" class="w-auto">Password</label>
+            </div><br>
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" type="button">Button</button>
+            </div>
         </form>
     </div>
 
