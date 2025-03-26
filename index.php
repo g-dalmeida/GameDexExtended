@@ -1,12 +1,13 @@
 <?php
-// Verifica se il form è stato inviato
-//$_SERVER è una variabile "superglobale" che contiene info riguardo il server e la sessione sottoforma di
-// array chiave - valore
+// Verifica se il form è stato inviato con il metodo POST
+// $_SERVER è una variabile superglobale che contiene informazioni riguardo il server e la sessione
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Ottieni i dati del form
-    $username = htmlspecialchars($_POST['username']);
-    $password = htmlspecialchars($_POST['password']);
 
+    // Ottieni i dati inviati dal form e sanificali con htmlspecialchars per prevenire attacchi XSS
+    $username = htmlspecialchars($_POST['user']);
+    $password = htmlspecialchars($_POST['pass']);
+
+    // Configurazione della connessione al database
     $host = "localhost";
     $dbname = "GameDexExtended";
     $user = "root";
@@ -14,41 +15,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $permissionsList = "";
 
     try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass); //connessione al db
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);//qualsiasi errore che c'è nel db me lo solleva un'eccezione
+        // Creazione dell'oggetto PDO per la connessione al database MySQL
+        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
 
-        $sql = "SELECT password as pss FROM utente WHERE username = :usrname";
-        $stmt = $pdo->prepare($sql); 
-        $stmt->bindParam(':usrname', $username);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Imposta la modalità di errore per generare eccezioni in caso di problemi
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $userpss = $row['pss'];
+        // Query per ottenere l'hash della password associata all'username
+        $sql = "SELECT password as pss FROM Utente WHERE username = :usrname";
+        $stmt = $pdo->prepare($sql); // Prepara la query per l'esecuzione         
 
-        if(password_verify($password, $userpss)) {
-            $sql = "SELECT * FROM permesso AS p INNER JOIN utente AS u on p.id_permesso = u.id WHERE u.username = :usrname";
+        $stmt->bindParam(':usrname', $username); // Associa il parametro alla variabile         
+        $stmt->execute(); // Esegue la query         
+        $row = $stmt->fetch(PDO::FETCH_ASSOC); // Ottiene il risultato della query         
+
+        $userpss = $row['pss']; // Recupera l'hash della password dall'array associativo         
+
+        // Verifica se la password inserita corrisponde all'hash nel database
+        if (password_verify($password, $userpss)) {
+            // Query per ottenere i permessi associati all'utente
+            $sql = "SELECT * FROM permesso AS p INNER JOIN utente AS u on p.id = u.id_permesso WHERE u.username = :usrname";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':usrname', $username);
             $stmt->execute();
             $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $permissionsList = "Permessi associati a " . $username . ":\\n";
+            // Costruisce una stringa con la lista dei permessi dell'utente
+            $permissionsList = "Permessi associati a " . $username . ":\n";
 
+            // Itera attraverso i risultati della query per elencare i permessi
             foreach ($row as $permesso)
-                $permissionsList .= "[" . $permesso['id_permesso'] . "] - " . $permesso['descrizione'] . "\\n";
-        }
-        else
+                $permissionsList .= "[" . $permesso['id_permesso'] . "] - " . $permesso['descrizione'] . "\n";
+
+                header("Location: accesso.php");
+        } else
+            // Messaggio di errore in caso di credenziali errate
             $permissionsList = "Username o password errati!";
 
+        // Mostra un messaggio di avviso con i permessi (o errore) tramite un alert JavaScript
         echo "<script>alert('$permissionsList');</script>";
+
     } catch (PDOException $e) {
+        // In caso di errore nella connessione al database, termina l'esecuzione e mostra il messaggio di errore
         die("Errore di connessione: " . $e->getMessage());
     }
 }
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,11 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container-sm">
         <h1 class="text-center">GAMEDEXEXTENDED</h1>
-        <form action="accesso.php" method="POST" onsubmit="return validateForm()">
+        <form  method="POST" onsubmit="return validateForm()">
             <div class="form-floating mb-3">
 
 
-                <input type="user" class="form-control" id="user" placeholder="Username" required>
+                <input type="user"  name="user" class="form-control" id="user" placeholder="Username" required>
                 <label for="user" class="w-auto">Username</label>
 
 
@@ -81,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-floating">
 
 
-                <input type="password" class="form-control" id="pass" placeholder="pass" required>
+                <input type="password" name="pass" class="form-control" id="pass" placeholder="pass" required>
                 <label for="pass" class="w-auto">Password</label>
 
 

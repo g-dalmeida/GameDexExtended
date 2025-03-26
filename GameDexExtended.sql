@@ -29,7 +29,7 @@ CREATE TABLE
         esperienza TEXT NOT NULL,
         stipendio FLOAT NOT NULL,
         username varchar(80) NOT NULL UNIQUE,
-        `password` varchar(80) NOT NULL,
+        `password` varchar(255) NOT NULL,
         ultimo_accesso DATETIME NOT NULL,
         attivo BOOLEAN DEFAULT 0,
         id_permesso INT,
@@ -126,7 +126,7 @@ INSERT INTO Team (descrizione, inizio, fine) VALUES
 
 -- Inserimento dati nella tabella Utente
 INSERT INTO Utente (nome, cognome, indirizzo, esperienza, stipendio, username, `password`, ultimo_accesso, attivo, id_permesso) VALUES 
-('Mario', 'Rossi', 'Via Roma, 10, Milano', '5 anni di esperienza in sviluppo', 35000, 'mario.rossi', 'password123', '2024-03-10 12:30:00', 1, 1),
+('Mario', 'Rossi', 'Via Roma, 10, Milano', '5 anni di esperienza in sviluppo', 35000, 'mario.rossi', '$2y$10$M12vXCdkSHNP1P6cioMIEupGTkdet1Ay1Odcftjjc38HxsiKHM9t6', '2024-03-10 12:30:00', 1, 1),
 ('Luca', 'Bianchi', 'Via Verdi, 22, Torino', '2 anni di esperienza in QA', 28000, 'luca.bianchi', 'qwerty123', '2024-03-11 09:15:00', 1, 2),
 ('Giulia', 'Neri', 'Corso Italia, 5, Firenze', '3 anni di esperienza in design UI', 30000, 'giulia.neri', 'design2024', '2024-03-09 18:45:00', 1, 3);
 
