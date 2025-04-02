@@ -127,8 +127,8 @@ INSERT INTO Team (descrizione, inizio, fine) VALUES
 -- Inserimento dati nella tabella Utente
 INSERT INTO Utente (nome, cognome, indirizzo, esperienza, stipendio, username, `password`, ultimo_accesso, attivo, id_permesso) VALUES 
 ('Mario', 'Rossi', 'Via Roma, 10, Milano', '5 anni di esperienza in sviluppo', 35000, 'mario.rossi', '$2y$10$M12vXCdkSHNP1P6cioMIEupGTkdet1Ay1Odcftjjc38HxsiKHM9t6', '2024-03-10 12:30:00', 1, 1),
-('Luca', 'Bianchi', 'Via Verdi, 22, Torino', '2 anni di esperienza in QA', 28000, 'luca.bianchi', 'qwerty123', '2024-03-11 09:15:00', 1, 2),
-('Giulia', 'Neri', 'Corso Italia, 5, Firenze', '3 anni di esperienza in design UI', 30000, 'giulia.neri', 'design2024', '2024-03-09 18:45:00', 1, 3);
+('Luca', 'Bianchi', 'Via Verdi, 22, Torino', '2 anni di esperienza in QA', 28000, 'luca.bianchi', '$2y$10$q4Caoo4jZulhgfb9aMfFse7qo3Uhh6b5/TZ6HjqXqa/EpsI1iPYAe', '2024-03-11 09:15:00', 1, 2),
+('Giulia', 'Neri', 'Corso Italia, 5, Firenze', '3 anni di esperienza in design UI', 30000, 'giulia.neri', '$2y$10$GIaCqiHvQ/mnk2oxLvIxVOc1cN6GNI5uwsSxPnapO3bKCixn6G4IO', '2024-03-09 18:45:00', 1, 3);
 
 -- Inserimento dati nella tabella Partecipa
 INSERT INTO Partecipa (ruolo, id_utente, id_team) VALUES 
