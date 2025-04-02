@@ -13,7 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = "root";
     $pass = "";
     $permissionsList = "";
-
     try {
         // Creazione dell'oggetto PDO per la connessione al database MySQL
         $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $user, $pass);
@@ -37,23 +36,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = "SELECT * FROM permesso AS p INNER JOIN utente AS u on p.id = u.id_permesso WHERE u.username = :usrname";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':usrname', $username);
+            
             $stmt->execute();
+
+
             $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             // Costruisce una stringa con la lista dei permessi dell'utente
             $permissionsList = "Permessi associati a " . $username . ":\n";
+            
 
             // Itera attraverso i risultati della query per elencare i permessi
             foreach ($row as $permesso)
-                $permissionsList .= "[" . $permesso['id_permesso'] . "] - " . $permesso['descrizione'] . "\n";
+                 $permissionsList .= "[" . $permesso['denominazione'] . "] - " . $permesso['descrizione'] . "\n";
+                // $permissionsList .= "[" . $permesso['denominazione'] . "] \n";
+                echo $permissionsList;
+                // echo "<script>alert('$permissionsList');</script>";
 
-                header("Location: accesso.php");
+                // header("Location: accesso.php");
         } else
             // Messaggio di errore in caso di credenziali errate
             $permissionsList = "Username o password errati!";
 
         // Mostra un messaggio di avviso con i permessi (o errore) tramite un alert JavaScript
-        echo "<script>alert('$permissionsList');</script>";
+        // echo "<script>alert('$permissionsList');</script>";
 
     } catch (PDOException $e) {
         // In caso di errore nella connessione al database, termina l'esecuzione e mostra il messaggio di errore
@@ -85,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-floating mb-3">
 
 
-                <input type="user"  name="user" class="form-control" id="user" placeholder="Username" required>
+                <input type="user"  name="user" class="form-control" id="user" placeholder="Username" >
                 <label for="user" class="w-auto">Username</label>
 
 
